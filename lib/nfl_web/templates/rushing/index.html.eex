@@ -1,0 +1,48 @@
+<h1>Listing Rushing data</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Attempts per game</th>
+      <th>Attempts</th>
+      <th>Rushing yards</th>
+      <th>Rushing yards per attempt</th>
+      <th>Rushing yards per game</th>
+      <th>Touchdowns</th>
+      <th>Longest rush</th>
+      <th>First downs</th>
+      <th>First down percentage</th>
+      <th>Twenty yards</th>
+      <th>Forty yards</th>
+      <th>Fum</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for rushing <- @rushing_data do %>
+    <tr>
+      <td><%= rushing.attempts_per_game %></td>
+      <td><%= rushing.attempts %></td>
+      <td><%= rushing.rushing_yards %></td>
+      <td><%= rushing.rushing_yards_per_attempt %></td>
+      <td><%= rushing.rushing_yards_per_game %></td>
+      <td><%= rushing.touchdowns %></td>
+      <td><%= rushing.longest_rush %></td>
+      <td><%= rushing.first_downs %></td>
+      <td><%= rushing.first_down_percentage %></td>
+      <td><%= rushing.twenty_yards %></td>
+      <td><%= rushing.forty_yards %></td>
+      <td><%= rushing.fum %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.rushing_path(@conn, :show, rushing) %></span>
+        <span><%= link "Edit", to: Routes.rushing_path(@conn, :edit, rushing) %></span>
+        <span><%= link "Delete", to: Routes.rushing_path(@conn, :delete, rushing), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span>
