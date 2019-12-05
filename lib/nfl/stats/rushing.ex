@@ -9,7 +9,7 @@ defmodule Nfl.Stats.Rushing do
     field :first_downs, :integer
     field :forty_yards, :integer
     field :fum, :integer
-    field :longest_rush, :integer
+    field :longest_rush, :string
     field :rushing_yards, :integer
     field :rushing_yards_per_attempt, :decimal
     field :rushing_yards_per_game, :decimal
@@ -25,7 +25,42 @@ defmodule Nfl.Stats.Rushing do
   @doc false
   def changeset(rushing, attrs) do
     rushing
-    |> cast(attrs, [:attempts_per_game, :attempts, :rushing_yards, :rushing_yards_per_attempt, :rushing_yards_per_game, :touchdowns, :longest_rush, :first_downs, :first_down_percentage, :twenty_yards, :forty_yards, :fum])
-    |> validate_required([:attempts_per_game, :attempts, :rushing_yards, :rushing_yards_per_attempt, :rushing_yards_per_game, :touchdowns, :longest_rush, :first_downs, :first_down_percentage, :twenty_yards, :forty_yards, :fum])
+    |> cast(attrs, [
+      :attempts_per_game,
+      :attempts,
+      :rushing_yards,
+      :rushing_yards_per_attempt,
+      :rushing_yards_per_game,
+      :touchdowns,
+      :longest_rush,
+      :first_downs,
+      :first_down_percentage,
+      :twenty_yards,
+      :forty_yards,
+      :fum,
+      :player_id,
+      :team_id,
+      :position_id
+    ])
+    |> validate_required([
+      :attempts_per_game,
+      :attempts,
+      :rushing_yards,
+      :rushing_yards_per_attempt,
+      :rushing_yards_per_game,
+      :touchdowns,
+      :longest_rush,
+      :first_downs,
+      :first_down_percentage,
+      :twenty_yards,
+      :forty_yards,
+      :fum,
+      :player_id,
+      :team_id,
+      :position_id
+    ])
+    |> unique_constraint(:player_id)
   end
+
+  def new(attrs), do: changeset(%__MODULE__{}, attrs)
 end

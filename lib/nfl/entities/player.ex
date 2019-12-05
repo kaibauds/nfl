@@ -15,4 +15,8 @@ defmodule Nfl.Entities.Player do
     |> validate_required([:name])
     |> unique_constraint(:name)
   end
+
+  def new(attrs) do
+    changeset(%__MODULE__{}, attrs)
+  end
 end

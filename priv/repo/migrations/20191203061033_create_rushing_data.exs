@@ -9,7 +9,7 @@ defmodule Nfl.Repo.Migrations.CreateRushingData do
       add :rushing_yards_per_attempt, :decimal
       add :rushing_yards_per_game, :decimal
       add :touchdowns, :integer
-      add :longest_rush, :integer
+      add :longest_rush, :string
       add :first_downs, :integer
       add :first_down_percentage, :decimal
       add :twenty_yards, :integer
@@ -22,7 +22,7 @@ defmodule Nfl.Repo.Migrations.CreateRushingData do
       timestamps()
     end
 
-    create index(:rushing_data, [:player_id])
+    create unique_index(:rushing_data, [:player_id])
     create index(:rushing_data, [:team_id])
     create index(:rushing_data, [:position_id])
   end
