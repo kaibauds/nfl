@@ -39,6 +39,12 @@ defmodule Nfl.Stats do
     Repo.all(Rushing)
   end
 
+  def list_rushing_data_with_preload do
+    Rushing
+    |> preload([:player, :team, :position])
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single rushing.
 

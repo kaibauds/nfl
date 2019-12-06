@@ -3,6 +3,9 @@
 <table>
   <thead>
     <tr>
+      <th>Player</th>
+      <th>Team</th>
+      <th>Position</th>
       <th>Attempts per game</th>
       <th>Attempts</th>
       <th>Rushing yards</th>
@@ -22,6 +25,9 @@
   <tbody>
 <%= for rushing <- @rushing_data do %>
     <tr>
+      <td><%= rushing.player.name %></td>
+      <td><%= rushing.team.name %></td>
+      <td><%= rushing.position.name %></td>
       <td><%= rushing.attempts_per_game %></td>
       <td><%= rushing.attempts %></td>
       <td><%= rushing.rushing_yards %></td>

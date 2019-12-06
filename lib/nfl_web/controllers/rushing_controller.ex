@@ -5,7 +5,8 @@ defmodule NflWeb.RushingController do
   alias Nfl.Stats.Rushing
 
   def index(conn, _params) do
-    rushing_data = Stats.list_rushing_data()
+    # rushing_data = Stats.list_rushing_data()
+    rushing_data = Stats.list_rushing_data_with_preload()
     render(conn, "index.html", rushing_data: rushing_data)
   end
 

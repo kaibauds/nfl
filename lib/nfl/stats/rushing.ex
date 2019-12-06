@@ -15,9 +15,9 @@ defmodule Nfl.Stats.Rushing do
     field :rushing_yards_per_game, :decimal
     field :touchdowns, :integer
     field :twenty_yards, :integer
-    field :player_id, :id
-    field :team_id, :id
-    field :position_id, :id
+    belongs_to :player, Nfl.Entities.Player
+    belongs_to :team, Nfl.Entities.Team
+    belongs_to :position, Nfl.Refs.Position
 
     timestamps()
   end
