@@ -6,17 +6,17 @@
       <th>Player</th>
       <th>Team</th>
       <th>Position</th>
-      <th>Attempts per game</th>
+      <th>Attempts per Game</th>
       <th>Attempts</th>
-      <th>Rushing yards</th>
-      <th>Rushing yards per attempt</th>
-      <th>Rushing yards per game</th>
-      <th>Touchdowns</th>
-      <th>Longest rush</th>
-      <th>First downs</th>
-      <th>First down percentage</th>
-      <th>Twenty yards</th>
-      <th>Forty yards</th>
+      <th><%= link "Total Rushing Yards", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"rushing_yards"}) %><%= ascend() %></th>
+      <th>Rushing Yards per Attempt</th>
+      <th>Rushing Yards per Game</th>
+      <th><%= link "Total Rushing Touchdowns", to: Routes.rushing_path(@conn, :index) %></th>
+      <th><%= link "Longest Rush", to: Routes.rushing_path(@conn, :index) %></th>
+      <th>First Downs</th>
+      <th>First Down Percentage</th>
+      <th>Twenty Yards</th>
+      <th>Forty Yards</th>
       <th>Fum</th>
 
       <th></th>

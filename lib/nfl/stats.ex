@@ -7,6 +7,7 @@ defmodule Nfl.Stats do
   alias Nfl.Repo
 
   alias Nfl.Stats.Rushing
+  alias Nfl.Entities.Player
 
   @stats_key_mapping %{
     "1st" => :first_downs,
@@ -26,6 +27,29 @@ defmodule Nfl.Stats do
     "Yds/G" => :rushing_yards_per_game
   }
 
+  defp apply_filters_and_sorts(query, _query_state = {filters, sorts}) do
+    add_filter_to_query = fn {field, v}, query ->
+      case field do
+        :player_name ->
+          query |> where([rushing, player], ilike(player.name,^"#{v}%"))
+
+        :team_name ->
+          query
+
+        :position_name ->
+          query
+
+        field ->
+          query |> where(^[{field, v}])
+      end
+    end
+
+    flip = fn {a, b} -> {b, a} end
+    order_by_list = Enum.map(sorts, &flip.(&1))
+
+    Enum.reduce(filters, query, &add_filter_to_query.(&1, &2)) |> order_by(^order_by_list)
+  end
+
   @doc """
   Returns the list of rushing_data.
 
@@ -39,8 +63,20 @@ defmodule Nfl.Stats do
     Repo.all(Rushing)
   end
 
-  def list_rushing_data_with_preload do
+  def list_rushing_data(:with_preload) do
     Rushing
+    |> preload([:player, :team, :position])
+    |> Repo.all()
+  end
+
+  def list_rushing_data(
+        :with_preload,
+        filters,
+        sorts
+      ) do
+    Rushing
+    |> join(:inner, [r], p in Player, on: r.player_id == p.id)
+    |> apply_filters_and_sorts({filters, sorts})
     |> preload([:player, :team, :position])
     |> Repo.all()
   end
