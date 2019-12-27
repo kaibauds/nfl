@@ -6,17 +6,17 @@
       <th>Player</th>
       <th>Team</th>
       <th>Position</th>
-      <th>Attempts per Game</th>
+      <th><span><%= link "Total_Rushing_Yards", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"rushing_yards"}) %><%= sort_sign(@conn, :rushing_yards) %></span></th>
+      <th><%= link "Total_Rushing_Touchdowns", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"touchdowns"}) %><%= sort_sign(@conn, :touchdowns) %></th>
+      <th><%= link "Longest_Rush", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"longest_rush"}) %><%= sort_sign(@conn, :longest_rush) %></th>
+      <th>Attempt/game</th>
       <th>Attempts</th>
-      <th><%= link "Total Rushing Yards", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"rushing_yards"}) %><%= ascend() %></th>
-      <th>Rushing Yards per Attempt</th>
-      <th>Rushing Yards per Game</th>
-      <th><%= link "Total Rushing Touchdowns", to: Routes.rushing_path(@conn, :index) %></th>
-      <th><%= link "Longest Rush", to: Routes.rushing_path(@conn, :index) %></th>
-      <th>First Downs</th>
-      <th>First Down Percentage</th>
-      <th>Twenty Yards</th>
-      <th>Forty Yards</th>
+      <th>Rushing_Yards/attempt</th>
+      <th>Rushing_Yards/game</th>
+      <th>First_Downs</th>
+      <th>First_Down%</th>
+      <th>Twenty_Yards</th>
+      <th>Forty_Yards</th>
       <th>Fum</th>
 
       <th></th>
@@ -28,13 +28,13 @@
       <td><%= rushing.player.name %></td>
       <td><%= rushing.team.name %></td>
       <td><%= rushing.position.name %></td>
-      <td><%= rushing.attempts_per_game %></td>
-      <td><%= rushing.attempts %></td>
       <td><%= rushing.rushing_yards %></td>
-      <td><%= rushing.rushing_yards_per_attempt %></td>
-      <td><%= rushing.rushing_yards_per_game %></td>
       <td><%= rushing.touchdowns %></td>
       <td><%= rushing.longest_rush %></td>
+      <td><%= rushing.attempts_per_game %></td>
+      <td><%= rushing.attempts %></td>
+      <td><%= rushing.rushing_yards_per_attempt %></td>
+      <td><%= rushing.rushing_yards_per_game %></td>
       <td><%= rushing.first_downs %></td>
       <td><%= rushing.first_down_percentage %></td>
       <td><%= rushing.twenty_yards %></td>

@@ -15,9 +15,12 @@ defmodule NflWeb.RushingController do
   @type sorts_t :: keyword(:asc | :desc)
   @type query_state_t :: nil | {filters_t, sorts_t}
 
-  defp get_query_state(conn), do: conn.assigns[:query_state]
+  # def get_query_state(conn), do: conn.assigns[:query_state]
+  def get_query_state(conn), do: Plug.Conn.get_session(conn, :query_state)
 
-  defp set_query_state(conn, query_state), do: Plug.Conn.assign(conn, :query_state, query_state)
+  # def set_query_state(conn, query_state), do: Plug.Conn.assign(conn, :query_state, query_state)
+  def set_query_state(conn, query_state),
+    do: Plug.Conn.put_session(conn, :query_state, query_state)
 
   defp revert_order(:asc), do: :desc
   defp revert_order(:desc), do: :asc
@@ -28,6 +31,7 @@ defmodule NflWeb.RushingController do
 
   defp new_query_state(query_state, params = %{"sort_by" => sort_field_name})
        when map_size(params) == 1 do
+
     {filters, sorts} =
       case query_state do
         nil -> {Keyword.new(), Keyword.new()}
@@ -57,16 +61,18 @@ defmodule NflWeb.RushingController do
   end
 
   defp reset_query_state(conn, params) do
-    query_state = new_query_state(get_query_state(conn), params)
-    set_query_state(conn, query_state)
-    query_state
+    last_query_state = get_query_state(conn)
+    IO.inspect(last_query_state, label: "assgins")
+    query_state = new_query_state(last_query_state, params)
+    new_conn = set_query_state(conn, query_state)
+    {new_conn, query_state}
   end
 
   def index(conn, params) do
-    {filters, sorts} = reset_query_state(conn, params)
+    {new_conn, {filters, sorts}} = reset_query_state(conn, params)
 
     rushing_data = Stats.list_rushing_data(:with_preload, filters, sorts)
-    render(conn, "index.html", rushing_data: rushing_data)
+    render(new_conn, "index.html", rushing_data: rushing_data)
   end
 
   def new(conn, _params) do
