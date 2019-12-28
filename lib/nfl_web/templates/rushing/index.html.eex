@@ -1,5 +1,13 @@
 <h1>Listing Rushing data</h1>
 
+<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %> 
+<%= form_for @conn, Routes.rushing_path(@conn, :index), [method: "get"], fn f -> %>
+  <label>
+    Player: <%= text_input f, :player_name, value: filter_value(@conn, :player_name) %>
+  </label>
+  <%= submit "Search" %>
+<% end %>
+
 <table>
   <thead>
     <tr>

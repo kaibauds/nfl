@@ -65,7 +65,7 @@ defmodule NflWeb.RushingController do
     IO.inspect(last_query_state, label: "assgins")
     query_state = new_query_state(last_query_state, params)
     new_conn = set_query_state(conn, query_state)
-    {new_conn, query_state}
+    {new_conn, query_state} |> IO.inspect(label: "query state reset")
   end
 
   def index(conn, params) do

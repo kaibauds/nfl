@@ -31,16 +31,16 @@ defmodule Nfl.Stats do
     add_filter_to_query = fn {field, v}, query ->
       case field do
         :player_name ->
-          query |> where([rushing, player], ilike(player.name,^"#{v}%"))
+          query |> where([rushing, player], ilike(player.name, ^"#{v}%"))
 
-        :team_name ->
+        # be noticed that certain parameter can be added be the framework by default
+        :_utf8 ->
           query
 
-        :position_name ->
+        #  this function can be extended to search by all the fields
+        _field ->
+          # query |> where(^[{_field, v}])
           query
-
-        field ->
-          query |> where(^[{field, v}])
       end
     end
 
