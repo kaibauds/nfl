@@ -22,6 +22,8 @@ defmodule NflWeb.Router do
   scope "/stats", NflWeb do
     pipe_through :browser
 
+    get "/rushing_data/download", RushingController, :download
+
     resources "/rushing_data", RushingController
   end
 

@@ -29,9 +29,12 @@ defmodule NflWeb.RushingController do
     {Keyword.new(), Keyword.new()}
   end
 
+  defp new_query_state(_query_state = nil, params = %{"_utf8" => _}) when map_size(params) == 1 do
+    {Keyword.new(), Keyword.new()}
+  end
+
   defp new_query_state(query_state, params = %{"sort_by" => sort_field_name})
        when map_size(params) == 1 do
-
     {filters, sorts} =
       case query_state do
         nil -> {Keyword.new(), Keyword.new()}
@@ -72,7 +75,44 @@ defmodule NflWeb.RushingController do
     {new_conn, {filters, sorts}} = reset_query_state(conn, params)
 
     rushing_data = Stats.list_rushing_data(:with_preload, filters, sorts)
+
     render(new_conn, "index.html", rushing_data: rushing_data)
+    |> IO.inspect(label: "----------------------------\n")
+  end
+
+  def v(struct, fields = [_ | _]) do
+    # Enum.reduce(fields, struct, & &2[&1])
+    Enum.reduce(fields, struct, &Map.get(&2, &1))
+  end
+
+  def v(struct, field) when is_atom(field) do
+    Map.get(struct, field)
+  end
+
+  @spec download(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def download(conn, _params) do
+    {filters, sorts} = get_query_state(conn)
+
+    rushing_data = Stats.list_rushing_data(:with_preload, filters, sorts)
+
+    rushing_data_csv =
+      [view_module(conn).view_columns()]
+      |> Stream.concat(
+        rushing_data
+        |> Stream.map(fn row ->
+          Enum.reduce(
+            view_module(conn).data_columns(),
+            [],
+            &[v(row, &1) | &2]
+          )
+          |> Enum.reverse()
+          |> Stream.map(&to_string(&1))
+        end)
+      )
+      |> CSV.encode()
+      |> Enum.map(& &1)
+
+    send_download(conn, {:binary, rushing_data_csv}, filename: "rushing_data.csv")
   end
 
   def new(conn, _params) do

@@ -59,4 +59,6 @@
   </tbody>
 </table>
 
+<span><%= link "Download the data", to: Routes.rushing_path(@conn, :download) %></span>
+
 <span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span>
