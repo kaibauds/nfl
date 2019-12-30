@@ -4,6 +4,8 @@ defmodule NflWeb.RushingController do
   alias Nfl.Stats
   alias Nfl.Stats.Rushing
 
+  import Utils
+
   @moduledoc """
   :query_state will be stored in the conn.assigns, in the format as the example below:
   { [player: "Tom"], [sort_by: :rushing_yards] } = {fileters, sort_rules}
@@ -80,16 +82,6 @@ defmodule NflWeb.RushingController do
     |> IO.inspect(label: "----------------------------\n")
   end
 
-  def v(struct, fields = [_ | _]) do
-    # Enum.reduce(fields, struct, & &2[&1])
-    Enum.reduce(fields, struct, &Map.get(&2, &1))
-  end
-
-  def v(struct, field) when is_atom(field) do
-    Map.get(struct, field)
-  end
-
-  @spec download(Plug.Conn.t(), any) :: Plug.Conn.t()
   def download(conn, _params) do
     {filters, sorts} = get_query_state(conn)
 

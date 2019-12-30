@@ -1,64 +1,42 @@
 <h1>Listing Rushing data</h1>
-
-<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %> 
+<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %>
 <%= form_for @conn, Routes.rushing_path(@conn, :index), [method: "get"], fn f -> %>
-  <label>
-    Player: <%= text_input f, :player_name, value: filter_value(@conn, :player_name) %>
-  </label>
-  <%= submit "Search" %>
+<label>
+  Player: <%= text_input f, :player_name, value: filter_value(@conn, :player_name) %>
+</label>
+<span><%= submit "Search" %>
+  <%= button "Download", to: Routes.rushing_path(@conn, :download), method: "get" %>
+</span>
 <% end %>
-
 <table>
   <thead>
     <tr>
-      <th>Player</th>
-      <th>Team</th>
-      <th>Position</th>
-      <th><span><%= link "Total_Rushing_Yards", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"rushing_yards"}) %><%= sort_sign(@conn, :rushing_yards) %></span></th>
-      <th><%= link "Total_Rushing_Touchdowns", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"touchdowns"}) %><%= sort_sign(@conn, :touchdowns) %></th>
-      <th><%= link "Longest_Rush", to: Routes.rushing_path(@conn, :index, %{"sort_by"=>"longest_rush"}) %><%= sort_sign(@conn, :longest_rush) %></th>
-      <th>Attempt/game</th>
-      <th>Attempts</th>
-      <th>Rushing_Yards/attempt</th>
-      <th>Rushing_Yards/game</th>
-      <th>First_Downs</th>
-      <th>First_Down%</th>
-      <th>Twenty_Yards</th>
-      <th>Forty_Yards</th>
-      <th>Fum</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for rushing <- @rushing_data do %>
+      <%= Enum.map(view_columns(), fn column_name -> %>
+      <%= case column_name do %>
+        <% x when x in ["Rushing Yards", "Rushing Touchdowns", "Longest Rush"] -> %>
+        <th><%= link x, to: Routes.rushing_path(@conn, :index, %{"sort_by"=>to_string(data_column(x))}) %><%= sort_sign(@conn, data_column(x)) %></th>
+        <% y -> %>
+        <th><%= y %></th>
+      <% end %>
+    <% end) %>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+  <%# <%= for rushing <- @rushing_data do %>
+    <%= Enum.map(@rushing_data, fn rushing -> %>
     <tr>
-      <td><%= rushing.player.name %></td>
-      <td><%= rushing.team.name %></td>
-      <td><%= rushing.position.name %></td>
-      <td><%= rushing.rushing_yards %></td>
-      <td><%= rushing.touchdowns %></td>
-      <td><%= rushing.longest_rush %></td>
-      <td><%= rushing.attempts_per_game %></td>
-      <td><%= rushing.attempts %></td>
-      <td><%= rushing.rushing_yards_per_attempt %></td>
-      <td><%= rushing.rushing_yards_per_game %></td>
-      <td><%= rushing.first_downs %></td>
-      <td><%= rushing.first_down_percentage %></td>
-      <td><%= rushing.twenty_yards %></td>
-      <td><%= rushing.forty_yards %></td>
-      <td><%= rushing.fum %></td>
-
-      <td>
-        <span><%= link "Show", to: Routes.rushing_path(@conn, :show, rushing) %></span>
-        <span><%= link "Edit", to: Routes.rushing_path(@conn, :edit, rushing) %></span>
-        <span><%= link "Delete", to: Routes.rushing_path(@conn, :delete, rushing), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
+      <%= Enum.map(data_columns(), fn field -> %>
+      <td><%= v(rushing, field) %></td>
+    <% end) %>
+    <td>
+      <span><%= link "Show", to: Routes.rushing_path(@conn, :show, rushing) %></span>
+      <span><%= link "Edit", to: Routes.rushing_path(@conn, :edit, rushing) %></span>
+      <span><%= link "Delete", to: Routes.rushing_path(@conn, :delete, rushing), method: :delete, data: [confirm: "Are you sure?"] %></span>
+    </td>
+  </tr>
+  <%# <% end %>
+<% end) %>
+</tbody>
 </table>
-
-<span><%= link "Download the data", to: Routes.rushing_path(@conn, :download) %></span>
-
 <span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span>

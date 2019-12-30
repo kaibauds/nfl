@@ -1,17 +1,35 @@
 defmodule NflWeb.RushingView do
   use NflWeb, :view
 
-  def view_columns do
-    ~w(Player Team Position Total_Rushing_Yards Total_Rushing_Touchdowns Longest_Rush
-       Attempt/game Attempts Rushing_Yards/attempt Rushing_Yards/game First_Downs
-       First_Downs% Twenty_Yards Forty_Yards Fum)
-  end
+  import Utils
 
-  def data_columns do
-    [[:player, :name], [:team, :name], [:position, :name]] ++
-      ~w(rushing_yards touchdowns longest_rush attempts_per_game attempts rushing_yards_per_attempt
+  def view_columns,
+    do: [
+      "Player",
+      "Team",
+      "Position",
+      "Rushing Yards",
+      "Rushing Touchdowns",
+      "Longest Rush",
+      "Attempts per_game",
+      "Total Attempts",
+      "Rushing_Yards per_attempt",
+      "Rushing_Yards per_game",
+      "Rushing First_downs",
+      "First_Down Percentage",
+      "Twenty+ Yards",
+      "Forty+ Yards",
+      "Rushing Fumbles"
+    ]
+
+  def data_columns,
+    do:
+      [~w(player name)a, ~w(team name)a, ~w(position name)a] ++
+        ~w(rushing_yards touchdowns longest_rush attempts_per_game attempts rushing_yards_per_attempt
          rushing_yards_per_game first_downs first_down_percentage twenty_yards forty_yards fum)a
-  end
+
+  def data_column(view_column),
+    do: Enum.at(data_columns(), Enum.find_index(view_columns(), &(&1 == view_column)))
 
   def sort_sign(:asc), do: "↑"
 
