@@ -54,4 +54,8 @@ defmodule NflWeb.RushingView do
       nil -> ""
     end
   end
+
+  def longest_rush_text(rushing) do
+    "#{to_string(rushing.longest_rush)}#{if rushing.longest_rush_td, do: "T", else: ""}"
+  end
 end

@@ -79,7 +79,6 @@ defmodule NflWeb.RushingController do
     rushing_data = Stats.list_rushing_data(:with_preload, filters, sorts)
 
     render(new_conn, "index.html", rushing_data: rushing_data)
-    |> IO.inspect(label: "----------------------------\n")
   end
 
   def download(conn, _params) do
@@ -95,7 +94,13 @@ defmodule NflWeb.RushingController do
           Enum.reduce(
             view_module(conn).data_columns(),
             [],
-            &[v(row, &1) | &2]
+            &[
+              case &1 do
+                :longest_rush -> view_module(conn).longest_rush_text(row)
+                _ -> v(row, &1)
+              end
+              | &2
+            ]
           )
           |> Enum.reverse()
           |> Stream.map(&to_string(&1))

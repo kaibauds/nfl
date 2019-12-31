@@ -9,7 +9,8 @@ defmodule Nfl.Stats.Rushing do
     field :first_downs, :integer
     field :forty_yards, :integer
     field :fum, :integer
-    field :longest_rush, :string
+    field :longest_rush, :integer
+    field :longest_rush_td, :boolean
     field :rushing_yards, :integer
     field :rushing_yards_per_attempt, :decimal
     field :rushing_yards_per_game, :decimal
@@ -33,6 +34,7 @@ defmodule Nfl.Stats.Rushing do
       :rushing_yards_per_game,
       :touchdowns,
       :longest_rush,
+      :longest_rush_td,
       :first_downs,
       :first_down_percentage,
       :twenty_yards,
@@ -50,6 +52,7 @@ defmodule Nfl.Stats.Rushing do
       :rushing_yards_per_game,
       :touchdowns,
       :longest_rush,
+      :longest_rush_td,
       :first_downs,
       :first_down_percentage,
       :twenty_yards,

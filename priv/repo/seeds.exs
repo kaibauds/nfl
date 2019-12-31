@@ -21,29 +21,29 @@ raw_data_map_list =
   |> Jason.decode!()
 
 raw_data_map_list
-|> Enum.map(&%{name: &1["Player"]})
-|> Enum.reject(&is_nil(&1.name))
+|> Stream.map(&%{name: &1["Player"]})
+|> Stream.reject(&is_nil(&1.name))
 |> Enum.each(&Nfl.Repo.insert!(Player.new(&1), on_conflict: :nothing))
 
 player_name_id_map = Nfl.name_id_map(Player)
 
 raw_data_map_list
-|> Enum.map(&%{name: &1["Team"]})
-|> Enum.reject(&is_nil(&1.name))
+|> Stream.map(&%{name: &1["Team"]})
+|> Stream.reject(&is_nil(&1.name))
 |> Enum.each(&Nfl.Repo.insert!(Team.new(&1), on_conflict: :nothing))
 
 team_name_id_map = Nfl.name_id_map(Team)
 
 raw_data_map_list
-|> Enum.map(&%{name: &1["Pos"]})
-|> Enum.reject(&is_nil(&1.name))
+|> Stream.map(&%{name: &1["Pos"]})
+|> Stream.reject(&is_nil(&1.name))
 |> Enum.each(&Nfl.Repo.insert!(Position.new(&1), on_conflict: :nothing))
 
 position_name_id_map = Nfl.name_id_map(Position)
 
 replace_name_with_id = fn data_map ->
   data_map
-  |> Enum.map(
+  |> Stream.map(
     &case &1 do
       {:player, name} -> {:player_id, player_name_id_map[name]}
       {:team, name} -> {:team_id, team_name_id_map[name]}
@@ -54,19 +54,27 @@ replace_name_with_id = fn data_map ->
   |> Map.new()
 end
 
+with_td? = fn
+  x when is_integer(x) -> false
+  x -> String.contains?(x, "T")
+end
+
+remove_td = fn
+  x when is_integer(x) -> x
+  x -> x |> String.trim() |> String.replace("T", "") |> String.to_integer()
+end
+
+format_number = fn
+  v when is_bitstring(v) -> v |> String.replace(",", "") |> String.to_integer()
+  v -> v
+end
+
 raw_data_map_list
-|> Enum.map(&(Stats.rushing_data_from_raw(&1) |> replace_name_with_id.()))
-|> Enum.map(
+|> Stream.map(&(Stats.rushing_data_from_raw(&1) |> replace_name_with_id.()))
+|> Stream.map(
   &(&1
-    |> Map.update!(
-      :rushing_yards,
-      fn v ->
-        case v do
-          v when is_bitstring(v) -> v |> String.replace(",", "") |> String.to_integer()
-          x -> x
-        end
-      end
-    )
-    |> Map.update!(:longest_rush, fn v -> to_string(v) end))
+    |> Map.update!(:rushing_yards, fn v -> format_number.(v) end)
+    |> Map.put(:longest_rush_td, with_td?.(&1.longest_rush))
+    |> Map.update!(:longest_rush, fn v -> remove_td.(v) end))
 )
 |> Enum.each(&Nfl.Repo.insert!(Rushing.new(&1), on_conflict: :nothing))
