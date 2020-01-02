@@ -69,7 +69,7 @@ defmodule Nfl.Stats do
     |> Repo.all()
   end
 
-  def list_rushing_data(
+  def list_rushing_data_query(
         :with_preload,
         filters,
         sorts
@@ -78,6 +78,14 @@ defmodule Nfl.Stats do
     |> join(:inner, [r], p in Player, on: r.player_id == p.id)
     |> apply_filters_and_sorts({filters, sorts})
     |> preload([:player, :team, :position])
+  end
+
+  def list_rushing_data(
+        :with_preload,
+        filters,
+        sorts
+      ) do
+    list_rushing_data_query(:with_preload, filters, sorts)
     |> Repo.all()
   end
 

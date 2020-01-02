@@ -1,14 +1,16 @@
-<h1>Listing Rushing data</h1>
-<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %>
+<div style=" max-height: 20vh; overflow: auto;">
 <%= form_for @conn, Routes.rushing_path(@conn, :index), [method: "get"], fn f -> %>
 <label>
-  Player: <%= text_input f, :player_name, value: filter_value(@conn, :player_name) %>
+  Player's name : <%= text_input f, :player_name, value: filter_value(@conn, :player_name) %>
 </label>
-<span><%= submit "Search" %>
-  <%= button "Download", to: Routes.rushing_path(@conn, :download), method: "get" %>
-</span>
+<span><%= submit "Search" %> </span>
 <% end %>
-<table>
+</div>
+<span style="font-size: 1.5em; color:green;">Rushing Data</span>
+<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %>
+<div style=" max-height: 70vh; overflow: auto;">
+<table> 
+  <%# <caption style="text-align: left; font-size: 2em; color: green">Rushing Data Report</caption> %>
   <thead>
     <tr>
       <%= Enum.map(view_columns(), fn column_name -> %>
@@ -41,4 +43,6 @@
 <% end) %>
 </tbody>
 </table>
-<span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span>
+</div>
+<span><%= button "Download", to: Routes.rushing_path(@conn, :download), method: "get" %></span>
+<!-- <span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span> -->
