@@ -7,10 +7,8 @@
 <% end %>
 </div>
 <span style="font-size: 1.5em; color:green;">Rushing Data</span>
-<%# <%= form_for @conn, Routes.rushing_path(@conn, :index), [as: :player, method: "get"], fn f -> %>
 <div style=" max-height: 70vh; overflow: auto;">
 <table> 
-  <%# <caption style="text-align: left; font-size: 2em; color: green">Rushing Data Report</caption> %>
   <thead>
     <tr>
       <%= Enum.map(view_columns(), fn column_name -> %>
@@ -25,7 +23,6 @@
   </tr>
 </thead>
 <tbody>
-  <%# <%= for rushing <- @rushing_data do %>
     <%= Enum.map(@rushing_data, fn rushing -> %>
     <tr>
       <%= Enum.map(data_columns(), fn :longest_rush -> %>
@@ -33,16 +30,9 @@
       <% field -> %>
       <td><%= v(rushing, field) %></td>
     <% end) %>
-    <td>
-      <span><%= link "Show", to: Routes.rushing_path(@conn, :show, rushing) %></span>
-      <span><%= link "Edit", to: Routes.rushing_path(@conn, :edit, rushing) %></span>
-      <span><%= link "Delete", to: Routes.rushing_path(@conn, :delete, rushing), method: :delete, data: [confirm: "Are you sure?"] %></span>
-    </td>
   </tr>
-  <%# <% end %>
 <% end) %>
 </tbody>
 </table>
 </div>
 <span><%= button "Download", to: Routes.rushing_path(@conn, :download), method: "get" %></span>
-<!-- <span><%= link "New Rushing", to: Routes.rushing_path(@conn, :new) %></span> -->

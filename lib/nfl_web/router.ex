@@ -16,19 +16,8 @@ defmodule NflWeb.Router do
   scope "/", NflWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/download", RushingController, :download
+
+    resources "", RushingController
   end
-
-  scope "/stats", NflWeb do
-    pipe_through :browser
-
-    get "/rushing_data/download", RushingController, :download
-
-    resources "/rushing_data", RushingController
-  end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", NflWeb do
-  #   pipe_through :api
-  # end
 end
