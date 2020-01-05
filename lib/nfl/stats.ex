@@ -10,24 +10,23 @@ defmodule Nfl.Stats do
   alias Nfl.Entities.Player
 
   defp apply_filters_and_sorts(query, _query_state = {filters, sorts}) do
-    add_filter_to_query = fn {field, v}, query ->
-      case field do
-        :player_name ->
-          query
-          |> where(
-            [rushing, player],
-            ilike(player.name, ^"#{v}%") or ilike(player.name, ^"% #{v}%")
-          )
+    field_list = Rushing.__schema__(:fields)
 
-        # be noticed that certain parameter can be added be the framework by default
-        :_utf8 ->
-          query
+    add_filter_to_query = fn
+      {:player_name, v}, query ->
+        query
+        |> where(
+          [rushing, player],
+          ilike(player.name, ^"#{v}%") or ilike(player.name, ^"% #{v}%")
+        )
 
-        # extension to search by multiple fields
-        _field ->
-          # query |> where(^[{_field, v}])
+      {field, _v}, query ->
+        if field not in field_list do
           query
-      end
+        else
+          # query |> where(^[{field, _v}])
+          query
+        end
     end
 
     flip = fn {a, b} -> {b, a} end

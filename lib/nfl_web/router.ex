@@ -18,6 +18,6 @@ defmodule NflWeb.Router do
 
     get "/download", RushingController, :download
 
-    resources "", RushingController
+    resources "/", RushingController
   end
 end

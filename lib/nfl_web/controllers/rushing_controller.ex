@@ -2,7 +2,6 @@ defmodule NflWeb.RushingController do
   use NflWeb, :controller
 
   alias Nfl.Stats
-  alias Nfl.Stats.Rushing
 
   import Utils
 

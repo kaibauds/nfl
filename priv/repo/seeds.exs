@@ -4,10 +4,9 @@
 
 alias Nfl.Entities.{Player, Team}
 alias Nfl.Refs.Position
-alias Nfl.Stats
 alias Nfl.Stats.Rushing
 
-@stats_key_mapping %{
+stats_key_mapping = %{
   "1st" => :first_downs,
   "1st%" => :first_down_percentage,
   "20+" => :twenty_yards,
@@ -25,11 +24,9 @@ alias Nfl.Stats.Rushing
   "Yds/G" => :rushing_yards_per_game
 }
 
-@doc "transform a raw map that represent an entry of rushing data to the schema map"
-
-rushing_data_from_raw= fn rushing_data_raw ->
+rushing_data_from_raw = fn rushing_data_raw ->
   rushing_data_raw
-  |> Enum.map(fn {key_raw, value} -> {@stats_key_mapping[key_raw], value} end)
+  |> Enum.map(fn {key_raw, value} -> {stats_key_mapping[key_raw], value} end)
   |> Map.new()
 end
 
